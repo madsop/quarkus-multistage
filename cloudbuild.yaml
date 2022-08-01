@@ -1,0 +1,20 @@
+steps:
+  # Build the container image and push it with Kaniko
+  - name: 'gcr.io/kaniko-project/executor:latest'
+    args:
+      - --cache=true
+      - --destination=gcr.io/$PROJECT_ID/quarkus-multistage
+    timeout: 1200s
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'quarkus-multistage'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/quarkus-multistage:latest'
+      - '--region'
+      - 'europe-north1'
+      - '--platform'
+      - 'managed'
+timeout: 1200s
