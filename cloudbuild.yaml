@@ -4,7 +4,9 @@ steps:
     args:
       - --cache=true
       - --destination=gcr.io/$PROJECT_ID/quarkus-multistage
+      - --build-arg=MY_SECRET
     timeout: 1200s
+    secretEnv: ['MY_SECRET']
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
@@ -18,3 +20,7 @@ steps:
       - '--platform'
       - 'managed'
 timeout: 1200s
+availableSecrets:
+  secretManager:
+    - versionName: projects/$PROJECT_ID/secrets/MY_SECRET/versions/latest
+      env: 'MY_SECRET'

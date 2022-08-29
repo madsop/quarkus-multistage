@@ -1,10 +1,11 @@
 # Step 1: Build the code using regular maven
 FROM maven:3.8.6-jdk-11 as maven
+ARG MY_SECRET
 COPY pom.xml /home/app/
 WORKDIR /home/app
 RUN mvn verify -B --fail-never
 COPY src /home/app/src
-RUN mvn package -Dquarkus.package.type=native-sources
+RUN mvn package -Dquarkus.package.type=native-sources -B -e -Dmysecret=${MY_SECRET}
 
 # Stage 2: Build the native image
 FROM quay.io/quarkus/ubi-quarkus-mandrel:22.1-java11 AS native-build
